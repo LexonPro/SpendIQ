@@ -1,0 +1,5 @@
+enum GraphType {
+  pie,
+  bar,
+}
+

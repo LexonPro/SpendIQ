@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import '../database/db_helper.dart';
+
+class MonthlySummary extends StatelessWidget {
+  const MonthlySummary({super.key});
+
+  Future<Map<String, double>> loadData() async {
+    final data = await DBHelper().getExpenses();
+    final Map<String, double> summary = {};
+
+    for (var e in data) {
+      final month = e['date'].substring(0, 7);
+      final amt = double.parse(e['amount']);
+      summary[month] = (summary[month] ?? 0) + amt;
+    }
+    return summary;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Monthly Summary")),
+      body: FutureBuilder<Map<String, double>>(
+        future: loadData(),
+        builder: (context, snap) {
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return ListView(
+            children: snap.data!.entries
+                .map(
+                  (e) => ListTile(
+                    title: Text(e.key),
+                    trailing:
+                        Text("₹${e.value.toStringAsFixed(0)}"),
+                  ),
+                )
+                .toList(),
+          );
+        },
+      ),
+    );
+  }
+}
