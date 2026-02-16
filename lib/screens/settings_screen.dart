@@ -11,6 +11,8 @@ import '../utils/export_pdf_helper.dart';
 import '../utils/export_image_helper.dart';
 import '../database/db_helper.dart';
 
+import 'about_screen.dart'; // ✅ added
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -19,6 +21,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+
   // ================= INFO PAGE =================
 
   void _openInfoPage(String title, String content) {
@@ -204,18 +207,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // ================= EXPORT =================
 
   Future<void> _exportExcel(BuildContext context) async {
-  final path = await ExportExcelHelper.exportExcel();
+    final path = await ExportExcelHelper.exportExcel();
 
-  if (path == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Excel export failed')),
-    );
-    return;
+    if (path == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Excel export failed')),
+      );
+      return;
+    }
+
+    _showExportSnackBar(context, path);
   }
-
-  _showExportSnackBar(context, path);
-}
-
 
   Future<void> _exportPDF(BuildContext context) async {
     final path = await ExportPdfHelper.exportPDF();
@@ -363,34 +365,78 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Card(
             child: Column(
               children: [
-                ListTile(
-                  title: const Text("Privacy Policy"),
-                  onTap: () => _openInfoPage(
-                    "Privacy Policy",
-                    "SpendIQ does not collect, store, or share any personal data.\n\n"
-                    "All expense and income information remains securely on your device.\n\n"
-                    "We respect your privacy and ensure full offline data protection.",
-                  ),
-                ),
+               ListTile(
+  leading: const Icon(Icons.privacy_tip_outlined),
+  title: const Text("Privacy Policy"),
+  onTap: () => _openInfoPage(
+    "Privacy Policy – SpendIQ",
+    "SpendIQ is designed to protect your privacy and keep your financial data secure.\n\n"
+    "Data Collection\n"
+    "SpendIQ does NOT collect, store, or transmit any personal or financial data "
+    "to external servers. All expense and income information remains stored locally "
+    "on your device only.\n\n"
+    "Permissions\n"
+    "The app may request limited permissions such as storage or media access only "
+    "for features like exporting reports or selecting a profile image. These "
+    "permissions are used strictly for app functionality and never for tracking.\n\n"
+    "Third-Party Services\n"
+    "SpendIQ does not use analytics trackers, advertising SDKs, or external data "
+    "collection services.\n\n"
+    "Data Security\n"
+    "All data is stored locally on your device, giving you full control over your "
+    "financial information.\n\n"
+    "Changes to Policy\n"
+    "This privacy policy may be updated in future versions of the app.\n\n"
+    "Developer: Shikhar Maurya\n"
+    "Email: shikharkumarmaurya@gmail.com\n\n"
+    "By using SpendIQ, you agree to this Privacy Policy.",
+  ),
+),
+
+
                 const Divider(height: 1),
                 ListTile(
-                  title: const Text("Terms & Conditions"),
-                  onTap: () => _openInfoPage(
-                    "Terms & Conditions",
-                    "SpendIQ is provided for personal finance tracking purposes only.\n\n"
-                    "The developer is not responsible for financial decisions made using this app.\n\n"
-                    "By using SpendIQ, you agree to use it responsibly.",
-                  ),
-                ),
+  leading: const Icon(Icons.description_outlined),
+  title: const Text("Terms & Conditions"),
+  onTap: () => _openInfoPage(
+    "Terms & Conditions – SpendIQ",
+    "Purpose of the App\n"
+    "SpendIQ is a personal expense tracking tool designed to help users manage "
+    "income, expenses, and budgeting habits.\n\n"
+    "No Financial Advice\n"
+    "SpendIQ does not provide financial, investment, or legal advice. All "
+    "decisions made using the app are the responsibility of the user.\n\n"
+    "Data Responsibility\n"
+    "All information is stored locally on the user’s device. The developer is "
+    "not responsible for data loss caused by device failure, deletion, or "
+    "external factors.\n\n"
+    "Acceptable Use\n"
+    "You agree to use SpendIQ only for lawful and personal purposes. "
+    "Unauthorized copying or redistribution without attribution is not allowed.\n\n"
+    "Limitation of Liability\n"
+    "The developer is not liable for any financial loss, data loss, or damages "
+    "resulting from the use of this application.\n\n"
+    "Updates & Changes\n"
+    "Features, policies, and terms may change in future versions of SpendIQ.\n\n"
+    "Developed by Shikhar Maurya\n"
+    "Independent Student Developer, India\n\n"
+    "By installing or using SpendIQ, you agree to these Terms & Conditions.",
+  ),
+),
+
+
                 const Divider(height: 1),
+
+                /// ✅ REAL ABOUT SCREEN
                 ListTile(
+                  leading: const Icon(Icons.info_outline),
                   title: const Text("About SpendIQ"),
-                  onTap: () => _openInfoPage(
-                    "About SpendIQ",
-                    "SpendIQ\nVersion 1.0.0\n\n"
-                    "A smart and simple expense tracker designed to help you manage "
-                    "income, spending, and monthly budget with ease.",
-                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AboutScreen()),
+                    );
+                  },
                 ),
               ],
             ),

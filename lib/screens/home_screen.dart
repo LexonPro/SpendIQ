@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'contribute_screen.dart';
 
 import '../database/db_helper.dart';
 import '../models/expense_model.dart';
@@ -118,7 +119,22 @@ class _HomeScreenState extends State<HomeScreen>
     final glowColor = balance >= 0 ? Colors.greenAccent : Colors.redAccent;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('SpendIQ')),
+      appBar: AppBar(
+        title: const Text('SpendIQ'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite_border),
+            tooltip: "Support Developer",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ContributeScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
